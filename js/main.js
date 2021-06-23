@@ -11,6 +11,8 @@ const playBtn = document.getElementById('playBtn');
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+var tail = [];
+
 class Snake {
     constructor() {
         this.posX = 10;
@@ -20,7 +22,6 @@ class Snake {
         this.width = 10;
         this.height = 10;
         this.size = 5;
-        this.tail = {x: this.posX, y: this.posY};
     }
 
     draw() {
@@ -38,20 +39,18 @@ class Snake {
         this.posX += this.dx;
         this.posY += this.dy;
 
-        //Enregistrement de la position pour la queue
-        this.tail = {x: this.posX, y: this.posY};
-
         this.draw();
 
-        while (this.tail.length > this.size) {
-            this.tail.shift();
+        tail.push({x: snake.posX, y: snake.posY});
+        while (tail.length > snake.size) {
+            tail.shift();
         }
 
-        for (let i=0; i < this.tail.length; i++) {
+        for (let i=0; i < tail.length; i++) {
             ctx.fillStyle = SNAKE_COLOR;
-            ctx.fillRect(this.tail[i].x, this.tail[i].y, this.width, this.height);
+            ctx.fillRect(tail[i].x, tail[i].y, snake.width, snake.height);
             ctx.fillStyle = SNAKE_BORDER;
-            ctx.strokeRect(this.tail[i].x, this.tail[i].y, this.width, this.height);
+            ctx.strokeRect(tail[i].x, tail[i].y, snake.width, snake.height);
         }
     }
 
@@ -71,6 +70,10 @@ class Snake {
         if (event.code == 'ArrowUp' && this.dy != 10) {
             this.dx = 0;
             this.dy = -10;
+        }
+        if (event.code == 'Space') {
+            this.dx = 0;
+            this.dy = 0;
         }
     }
 }
